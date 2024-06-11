@@ -3,21 +3,7 @@ import 'izitoast/dist/css/iziToast.min.css';
 import 'modern-normalize/modern-normalize.css';
 import imageUrl from '../img/alert-icon.svg';
 import resolveImageUrl from '../img/resolve-icon.svg';
-// createPromise(delay, state) { return new Promise((resolve, reject) => {
-//      if (state === 'fulfilled') { setTimeout(() => { resolve(delay); }, delay); } else {
-//         setTimeout(() => {
-//             reject(delay); }, delay); } }); }
-//  document.querySelector('form').addEventListener('submit', function(event) {
-//     event.preventDefault();
-//     const delay = parseInt(document.querySelector('input[name="delay"]').value);
-//     const state = document.querySelector('input[name="state"]:checked').value;
-//     createPromise(delay, state).then((delay) => {
-//         iziToast.success({
-//             title: 'Success', message: `Fulfilled promise in ${delay}ms` });
-//         }) .catch((delay) => {
-//             iziToast.error({
-//         title: 'Error', message: `Rejected promise in ${delay}ms`
-//     }); }); });
+
 const inputForm = document.querySelector('.form');
 inputForm.addEventListener('submit', promiseGenerator);
 

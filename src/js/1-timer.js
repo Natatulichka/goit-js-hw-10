@@ -14,10 +14,8 @@ const refs = {
 };
 
 let intervalId;
-
-document.addEventListener('DOMContentLoaded', function () {});
-
-const options = {
+let userSelectedDate;
+flatpickr(refs.timeInput, {
   enableTime: true,
   time_24hr: true,
   defaultDate: new Date(),
@@ -52,9 +50,7 @@ const options = {
       refs.startBtn.classList.add('active');
     }
   },
-};
-let userSelectedDate;
-flatpickr(refs.timeInput, options);
+});
 
 refs.startBtn.addEventListener('click', function () {
   intervalId = setInterval(function () {

@@ -5,9 +5,9 @@ import imageUrl from '../img/alert-icon.svg';
 import resolveImageUrl from '../img/resolve-icon.svg';
 
 const inputForm = document.querySelector('.form');
-inputForm.addEventListener('submit', promiseGenerator);
+inputForm.addEventListener('submit', userPromise);
 
-function promiseGenerator(e) {
+function userPromise(e) {
   e.preventDefault();
 
   const delay = e.target.delay.value;
@@ -59,6 +59,4 @@ function promiseGenerator(e) {
         theme: 'dark',
       });
     });
-
-  console.log(promise);
 }

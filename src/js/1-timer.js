@@ -1,61 +1,86 @@
 import flatpickr from 'flatpickr';
+import 'flatpickr/dist/flatpickr.min.css';
 import iziToast from 'izitoast';
-// const options = {
-//   enableTime: true,
-//   time_24hr: true,
-//   defaultDate: new Date(),
-//   minuteIncrement: 1,
-//   onClose(selectedDates) {
-//     console.log(selectedDates[0]);
-//   },
-// };
-document.addEventListener('DOMContentLoaded', function () {
-  let userSelectedDate;
-  const options = {
-    enableTime: true,
-    time_24hr: true,
-    defaultDate: new Date(),
-    minuteIncrement: 1,
-    onClose(selectedDates) {
-      userSelectedDate = selectedDates[0];
-      const currentDate = new Date();
-      if (userSelectedDate < currentDate) {
-        iziToast.error({
-          title: 'Error',
-          message: 'Please choose a date in the future',
-        });
-        document.getElementById('start-btn').disabled = true;
-      } else {
-        document.getElementById('start-btn').disabled = false;
-      }
-    },
-  };
-  flatpickr('#datetime-picker', options);
-  document.getElementById('start-btn').addEventListener('click', function () {
-    this.disabled = true;
-    document.getElementById('datetime-picker').disabled = true;
-    const interval = setInterval(function () {
-      const currentDate = new Date();
-      const timeDiff = userSelectedDate - currentDate;
-      if (timeDiff <= 0) {
-        clearInterval(interval);
-        iziToast.success({
-          title: 'Success',
-          message: 'Countdown timer has ended',
-        });
-        document.getElementById('start-btn').disabled = false;
-        document.getElementById('datetime-picker').disabled = false;
-      } else {
-        const { days, hours, minutes, seconds } = convertMs(timeDiff);
-        document.getElementById('timer').innerText = `${addLeadingZero(
-          days
-        )} Days ${addLeadingZero(hours)} Hours ${addLeadingZero(
-          minutes
-        )} Minutes ${addLeadingZero(seconds)} Seconds`;
-      }
-    }, 1000);
-  });
+import 'izitoast/dist/css/iziToast.min.css';
+import imageUrl from '../img/alert-icon.svg';
+import 'modern-normalize/modern-normalize.css';
+const refs = {
+  timeInput: document.querySelector('#datetime-picker'),
+  startBtn: document.querySelector('[data-start]'),
+  dayData: document.querySelector('[data-days]'),
+  hoursData: document.querySelector('[data-hours]'),
+  minutesData: document.querySelector('[data-minutes]'),
+  secondsData: document.querySelector('[data-seconds]'),
+};
+
+let intervalId;
+
+document.addEventListener('DOMContentLoaded', function () {});
+
+const options = {
+  enableTime: true,
+  time_24hr: true,
+  defaultDate: new Date(),
+  minuteIncrement: 1,
+
+  onClose(selectedDates) {
+    userSelectedDate = selectedDates[0];
+    const currentDate = new Date();
+    if (userSelectedDate < currentDate) {
+      iziToast.error({
+        message: 'Please choose a date in the future',
+        backgroundColor: '#ef4040',
+        messageColor: '#fff',
+        messageSize: '16',
+        imageWidth: 302,
+        close: true,
+        closeOnEscape: true,
+        closeOnClick: true,
+        progressBar: true,
+        progressBarColor: '#b51b1b',
+        transitionIn: 'flipInX',
+        transitionOut: 'flipOutX',
+        position: 'topRight',
+        iconUrl: imageUrl,
+        iconColor: '#FAFAFB',
+        theme: 'dark',
+      });
+      refs.startBtn.disabled = true;
+      refs.startBtn.classList.remove('active');
+    } else {
+      refs.startBtn.disabled = false;
+      refs.startBtn.classList.add('active');
+    }
+  },
+};
+let userSelectedDate;
+flatpickr(refs.timeInput, options);
+
+refs.startBtn.addEventListener('click', function () {
+  intervalId = setInterval(function () {
+    const currentDate = new Date();
+    const timeDiff = userSelectedDate - currentDate;
+
+    if (timeDiff <= 0) {
+      clearInterval(intervalId);
+      iziToast.success({
+        title: 'Success',
+        message: 'Countdown timer has ended',
+      });
+      refs.startBtn.disabled = false;
+      refs.timeInput.disabled = false;
+    } else {
+      const { days, hours, minutes, seconds } = convertMs(timeDiff);
+      refs.dayData.textContent = addLeadingZero(days);
+      refs.hoursData.textContent = addLeadingZero(hours);
+      refs.minutesData.textContent = addLeadingZero(minutes);
+      refs.secondsData.textContent = addLeadingZero(seconds);
+    }
+  }, 1000);
+  refs.startBtn.disabled = true;
+  refs.timeInput.disabled = true;
 });
+
 function convertMs(ms) {
   const second = 1000;
   const minute = second * 60;
@@ -68,5 +93,5 @@ function convertMs(ms) {
   return { days, hours, minutes, seconds };
 }
 function addLeadingZero(value) {
-  return value.toString().padStart(2, '0');
+  return String(value).padStart(2, '0');
 }
